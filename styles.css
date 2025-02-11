@@ -1,0 +1,10 @@
+/* CSS pour centrer l'image dans le header */
+.header {
+    text-align: center;  /* Centre le contenu horizontalement */
+    margin-top: 20px;    /* Ajoute un espace au-dessus de l'image */
+}
+
+.logo {
+    width: 150px;        /* Ajuste la taille de l'image selon ton besoin */
+    height: auto;        /* Conserve les proportions de l'image */
+}
