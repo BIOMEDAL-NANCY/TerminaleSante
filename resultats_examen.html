@@ -25,9 +25,6 @@
             background-color: #0a2b47;
             color: white;
         }
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
         input[type="text"] {
             padding: 10px;
             width: 200px;
@@ -41,24 +38,48 @@
             border: none;
             cursor: pointer;
         }
-        .answers-table {
-            margin-top: 30px;
-            text-align: left;
-            width: 90%;
-            margin: auto;
+        
+
+        .header {
+            text-align: center;  /* Centre le contenu horizontalement */
+            margin-top: 20px;    /* Ajoute un espace au-dessus de l'image */
+        }
+
+        .logo {
+            width: 400px;        /* Ajuste la taille de l'image selon ton besoin */
+            height: auto;        /* Conserve les proportions de l'image */
+        }
+
+        /* Style de la table */
+        table {
+            width: 100%;
             border-collapse: collapse;
+            margin-top: 20px;
         }
-        .answers-table th, .answers-table td {
+
+        th, td {
             padding: 10px;
-            border: 1px solid #dddddd39;
+            text-align: center;
         }
-        .answers-table th {
-            background-color: #0a2b47;
+
+        /* Style pour les bonnes réponses (vert) */
+        .correct {
+            background-color: #28a745;
             color: white;
         }
+
+        /* Style pour les mauvaises réponses (rouge) */
+        .incorrect {
+            background-color: #dc3545;
+            color: white;
+        }
+
+
     </style>
-    <link rel="stylesheet" href="styles.css">
+
 </head>
+
+
 <body>
 
     <!-- Ajout de l'image -->
@@ -76,7 +97,10 @@
 
     <script>
         // Lien vers ton fichier CSV Google Sheets (ce fichier doit être public)
-        const csvUrl = "https://raw.githubusercontent.com/dapparu/resultats-examen/refs/heads/main/Examen_blanc_BIOMEDAL.csv";
+        const csvUrl = "https://raw.githubusercontent.com/BIOMEDAL-NANCY/TerminaleSante/refs/heads/main/Examen_blanc_BIOMEDAL.csv";
+
+        // Réponses correctes des QCM
+        const correctAnswers = ['A', 'AB', 'C', 'A', 'D', 'B', 'C', 'A', 'D', 'B', 'C', 'A', 'B', 'C', 'D', 'B', 'A', 'C', 'D', 'B', 'A', 'C', 'B', 'D', 'A', 'C', 'B', 'D', 'A', 'C', 'B', 'A', 'C', 'B', 'D', 'A', 'C', 'B', 'D', 'A', 'C', 'B', 'A', 'C', 'B', 'D', 'A', 'C', 'B', 'D', 'A', 'C', 'B', 'A', 'C', 'B', 'D', 'A'];
 
         function searchResults() {
             const studentID = document.getElementById("studentID").value;
@@ -93,15 +117,9 @@
                     console.log("Données CSV récupérées : ", data); // Afficher les données CSV dans la console pour voir si elles sont bien récupérées
                     const rows = data.split("\n");
                     let resultFound = false;
-                    let studentName = "";
-                    let note1 = 0;
-                    let note2 = 0;
-                    let studentRank1 = "";
-                    let studentRank2 = "";
+                    let note = 0;
+                    let studentRank = "";
                     let studentAnswers = [];
-                    let classNotes1 = [];
-                    let classNotes2 = [];
-                    let allAnswers = [];
 
                     rows.forEach((row, index) => {
                         if (index === 0) return; // Ignore la première ligne (en-têtes)
@@ -109,50 +127,44 @@
                         
                         // Si la première colonne (Numéro d'anonymat) correspond à celui de l'étudiant
                         if (columns[0] === studentID) {
-                            studentName = columns[1]; // Nom de l'étudiant
-                            note1 = parseFloat(columns[2]); // Note 1
-                            note2 = parseFloat(columns[3]); // Note 2
-                            studentRank = columns[5]; // Rang de l'étudiant
+                            note = parseFloat(columns[1]); // Note 
+                            studentRank = columns[2]; // Rang de l'étudiant
                             
                             // Récupère les réponses des QCM
-                            studentAnswers = columns.slice(6, 8); // Les réponses aux 60 QCM
+                            studentAnswers = columns.slice(3, 63); // Les réponses aux 60 QCM
                             resultFound = true;
                         }
-
-                        // Collecte des notes de la classe pour les calculs statistiques
-                        classNotes1.push(parseFloat(columns[2]));
-                        classNotes2.push(parseFloat(columns[3]));
-                        allAnswers.push(columns.slice(6, 8)); // Collecte les réponses des QCM pour la classe
                     });
 
                     const resultDiv = document.getElementById("result");
                     if (resultFound) {
-                        // Calculer la moyenne de la classe et l'écart-type pour chaque note
-                        const classAvg1 = calculateAverage(classNotes1);
-                        const classAvg2 = calculateAverage(classNotes2);
-                        const classStdDev1 = calculateStdDev(classNotes1, classAvg1);
-                        const classStdDev2 = calculateStdDev(classNotes2, classAvg2);
-
                         // Afficher les résultats de l'étudiant
                         resultDiv.innerHTML = `
-                            <h2>Résultats pour ${studentName}</h2>
-                            <p><strong>Note 1</strong> : ${note1}/20</p>
-                            <p><strong>Note 2</strong> : ${note2}/20</p>
+                            <h2>Résultats pour n°${studentID}</h2>
+                            <p><strong>Note</strong> : ${note}</p>
                             <p><strong>Rang</strong> : ${studentRank}</p>
-                            <p><strong>Moyenne générale de la classe (Note 1)</strong> : ${classAvg1.toFixed(2)}/20</p>
-                            <p><strong>Moyenne générale de la classe (Note 2)</strong> : ${classAvg2.toFixed(2)}/20</p>
-                            <p><strong>Écart-type (Note 1)</strong> : ${classStdDev1.toFixed(2)}</p>
-                            <p><strong>Écart-type (Note 2)</strong> : ${classStdDev2.toFixed(2)}</p>
                         `;
 
-                        // Afficher les réponses des QCM
-                        resultDiv.innerHTML += "<h3>Vos réponses aux 60 QCM</h3>";
-                        resultDiv.innerHTML += "<table class='answers-table'><tr><th>QCM</th><th>Réponse</th></tr>";
+                        // Afficher les réponses aux QCM
+                        let answersHtml = '<h3>Réponses aux QCM :</h3><table class="answers-table"><thead><tr><th>Question</th><th>Réponse étudiante</th><th>Réponse correcte</th></tr></thead><tbody>';
+                        
                         studentAnswers.forEach((answer, index) => {
-                            resultDiv.innerHTML += `<tr><td>QCM ${index + 1}</td><td>${answer}</td></tr>`;
-                        });
-                        resultDiv.innerHTML += "</table>";
+                            const correctAnswer = correctAnswers[index];
+                            
 
+                            const rowClass = (answer === correctAnswer) ? 'correct' : 'incorrect';
+                            console.log(`QCM ${index + 1}: Réponse de l'étudiant = ${answer}, Réponse correcte = ${correctAnswer}, class - ${rowClass}`);
+                            answersHtml += `
+                                <tr class="${rowClass}">
+                                    <td>Question ${index + 1}</td>
+                                    <td>${answer}</td>
+                                    <td>${correctAnswer}</td>
+                                </tr>
+                            `;
+                        });
+                        
+                        answersHtml += '</tbody></table>';
+                        resultDiv.innerHTML += answersHtml; // Ajouter les réponses à la page
                     } else {
                         resultDiv.innerHTML = "<p>Aucun résultat trouvé pour ce numéro d'anonymat.</p>";
                     }
@@ -161,16 +173,6 @@
                     console.error("Erreur lors de la récupération des résultats : ", error);
                     alert("Une erreur est survenue lors de la récupération des résultats.");
                 });
-        }
-
-        function calculateAverage(notes) {
-            const total = notes.reduce((acc, note) => acc + note, 0);
-            return total / notes.length;
-        }
-
-        function calculateStdDev(notes, mean) {
-            const variance = notes.reduce((acc, note) => acc + Math.pow(note - mean, 2), 0) / notes.length;
-            return Math.sqrt(variance);
         }
     </script>
 
