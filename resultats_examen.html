@@ -146,14 +146,14 @@
                         `;
 
                         // Afficher les réponses aux QCM
-                        let answersHtml = '<h3>Réponses aux QCM :</h3><table class="answers-table"><thead><tr><th>Question</th><th>Réponse étudiante</th><th>Réponse correcte</th></tr></thead><tbody>';
+                        let answersHtml = '<h3>Réponses aux QCM :</h3><table class="answers-table"><thead><tr><th>Question</th><th>Réponse de l\'étudiant</th><th>Réponse correcte</th></tr></thead><tbody>';
                         
                         studentAnswers.forEach((answer, index) => {
                             const correctAnswer = correctAnswers[index];
                             
 
                             const rowClass = (answer === correctAnswer) ? 'correct' : 'incorrect';
-                            console.log(`QCM ${index + 1}: Réponse de l'étudiant = ${answer}, Réponse correcte = ${correctAnswer}, class - ${rowClass}`);
+                            //console.log(`QCM ${index + 1}: Réponse de l'étudiant = ${answer}, Réponse correcte = ${correctAnswer}, class - ${rowClass}`);
                             answersHtml += `
                                 <tr class="${rowClass}">
                                     <td>QCM ${index + 1}</td>
@@ -170,7 +170,7 @@
                     }
                 })
                 .catch(error => {
-                    console.error("Erreur lors de la récupération des résultats : ", error);
+                    //console.error("Erreur lors de la récupération des résultats : ", error);
                     alert("Une erreur est survenue lors de la récupération des résultats.");
                 });
         }
