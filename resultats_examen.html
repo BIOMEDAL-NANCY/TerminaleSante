@@ -128,15 +128,16 @@
                         
                         // Si la première colonne (Numéro d'anonymat) correspond à celui de l'étudiant
                         if (columns[0] === studentID) {
-                            note = parseFloat(columns[1]); // Note 
+                            note = columns[1]; // Note 
+                            //note = parseFloat(columns[1]); // Note 
                             studentRank = columns[2]; // Rang de l'étudiant
-                            noteUE1 = parseFloat(columns[3]); // Note UE1
+                            noteUE1 = columns[3]; // Note UE1
                             studentRankUE1 = columns[4]; // Rang UE1 de l'étudiant
-                            noteUE2 = parseFloat(columns[5]); // Note UE2
+                            noteUE2 = columns[5]; // Note UE2
                             studentRankUE2 = columns[6]; // Rang UE2 de l'étudiant
-                            noteUE3 = parseFloat(columns[7]); // Note UE3
+                            noteUE3 = columns[7]; // Note UE3
                             studentRankUE3 = columns[8]; // Rang UE3 de l'étudiant
-                            noteUE4 = parseFloat(columns[9]); // Note UE4
+                            noteUE4 = columns[9]; // Note UE4
                             studentRankUE4 = columns[10]; // Rang UE4 de l'étudiant
                             
                             // Récupère les réponses des QCM
