@@ -100,7 +100,7 @@
         const csvUrl = "https://raw.githubusercontent.com/BIOMEDAL-NANCY/TerminaleSante/refs/heads/main/Examen_blanc_BIOMEDAL.csv";
 
         // Réponses correctes des QCM
-        const correctAnswers = ['A', 'AB', 'C', 'A', 'D', 'B', 'C', 'A', 'D', 'B', 'C', 'A', 'B', 'C', 'D', 'B', 'A', 'C', 'D', 'B', 'A', 'C', 'B', 'D', 'A', 'C', 'B', 'D', 'A', 'C', 'B', 'A', 'C', 'B', 'D', 'A', 'C', 'B', 'D', 'A', 'C', 'B', 'A', 'C', 'B', 'D', 'A', 'C', 'B', 'D', 'A', 'C', 'B', 'A', 'C', 'B', 'D', 'A'];
+        const correctAnswers = ['ADE','BE','BCDE','BCD','BCD','ABCE','ACD','AD','ABDE','BCE','BE','ABC','AE','DE','AD','ACDE','A','D','A','BCE','BCD','ABD','ABC','AE','ABD','CE','CD','CD','BE','AC','C','BD','ABD','CDE','ACE','C','A','A','ABDE','AB','BE','ABD','ACDE','BDE','ABCDE','CDE','BCDE','ABCD','','A','ABDE','BCDE','ADE','BCD','ABCDE'];
 
         function searchResults() {
             const studentID = document.getElementById("studentID").value;
@@ -114,7 +114,7 @@
             fetch(csvUrl)
                 .then(response => response.text())
                 .then(data => {
-                    console.log("Données CSV récupérées : ", data); // Afficher les données CSV dans la console pour voir si elles sont bien récupérées
+                    //console.log("Données CSV récupérées : ", data); // Afficher les données CSV dans la console pour voir si elles sont bien récupérées
                     const rows = data.split("\n");
                     let resultFound = false;
                     let note = 0;
@@ -122,16 +122,25 @@
                     let studentAnswers = [];
 
                     rows.forEach((row, index) => {
-                        if (index === 0) return; // Ignore la première ligne (en-têtes)
-                        const columns = row.split(",");
+                        if (index === 0) return; // Ignore la première ligne (moyennes)
+                        if (index === 1) return; // Ignore la seconde ligne (en-têtes)
+                        const columns = row.split(";");
                         
                         // Si la première colonne (Numéro d'anonymat) correspond à celui de l'étudiant
                         if (columns[0] === studentID) {
                             note = parseFloat(columns[1]); // Note 
                             studentRank = columns[2]; // Rang de l'étudiant
+                            noteUE1 = parseFloat(columns[3]); // Note UE1
+                            studentRankUE1 = columns[4]; // Rang UE1 de l'étudiant
+                            noteUE2 = parseFloat(columns[5]); // Note UE2
+                            studentRankUE2 = columns[6]; // Rang UE2 de l'étudiant
+                            noteUE3 = parseFloat(columns[7]); // Note UE3
+                            studentRankUE3 = columns[8]; // Rang UE3 de l'étudiant
+                            noteUE4 = parseFloat(columns[9]); // Note UE4
+                            studentRankUE4 = columns[10]; // Rang UE4 de l'étudiant
                             
                             // Récupère les réponses des QCM
-                            studentAnswers = columns.slice(3, 63); // Les réponses aux 60 QCM
+                            studentAnswers = columns.slice(11, 66); // Les réponses aux 55 QCM
                             resultFound = true;
                         }
                     });
@@ -141,8 +150,16 @@
                         // Afficher les résultats de l'étudiant
                         resultDiv.innerHTML = `
                             <h2>Résultats pour n°${studentID}</h2>
-                            <p><strong>Note</strong> : ${note}</p>
-                            <p><strong>Rang</strong> : ${studentRank}</p>
+                            <p><strong>Note générale</strong> : ${note}</p>
+                            <p><strong>Rang général</strong> : ${studentRank}</p>
+                            <p><strong>Note UE1</strong> : ${noteUE1}</p>
+                            <p><strong>Rang UE1</strong> : ${studentRankUE1}</p>
+                            <p><strong>Note UE2</strong> : ${noteUE2}</p>
+                            <p><strong>Rang UE2</strong> : ${studentRankUE2}</p>
+                            <p><strong>Note UE3</strong> : ${noteUE3}</p>
+                            <p><strong>Rang UE3</strong> : ${studentRankUE3}</p>
+                            <p><strong>Note UE4</strong> : ${noteUE4}</p>
+                            <p><strong>Rang UE4</strong> : ${studentRankUE4}</p>
                         `;
 
                         // Afficher les réponses aux QCM
