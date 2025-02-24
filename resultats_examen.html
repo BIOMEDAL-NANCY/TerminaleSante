@@ -224,7 +224,7 @@
                         `;
 
                         // Afficher les réponses aux QCM
-                        let answersHtml = '<h3>Réponses aux QCM :</h3><table class="answers-table"><thead><tr><th>Question</th><th>Nombre de discordances</th><th>Réponse de l\'étudiant</th><th>Réponse correcte</th></tr></thead><tbody>';
+                        let answersHtml = '<h3>Réponses aux QCM :</h3><table class="answers-table"><thead><tr><th>Question</th><th>Nombre de discordances</th><th>Réponse de l\'étudiant</th><th>Réponse correcte</th><th>Nombre de points</th></tr></thead><tbody>';
                         
                         studentAnswers.forEach((answer, index) => {
                             const correctAnswer = correctAnswers[index];
@@ -233,7 +233,7 @@
                             //const rowClass = 'no_disco';
 
                             const rowClass = (discordancesStudent === 0) ? 'no_disco' : (discordancesStudent === 1) ? 'one_disco' : (discordancesStudent === 2) ? 'two_disco' : (discordancesStudent >= 3) ? 'three_disco' : 'incorrect';
-                            
+                            const pntsStudent = (discordancesStudent === 0) ? 1 : (discordancesStudent === 1) ? 0.5 : (discordancesStudent === 2) ? 0.2 : (discordancesStudent >= 3) ? 0 : 0;
                             
                             //const rowClass = (answer === correctAnswer) ? 'correct' : 'incorrect';
                             //console.log(`QCM ${index + 1}: Réponse de l'étudiant = ${answer}, Réponse correcte = ${correctAnswer}, class - ${rowClass}`);
@@ -243,6 +243,7 @@
                                 <td class="${rowClass}">${COUNT_DISCORDANCES(answer, correctAnswer)}</td>
                                 <td>${answer}</td>
                                 <td>${correctAnswer}</td>
+                                <td>${pntsStudent}</td>
                             </tr>
                             `;
 
