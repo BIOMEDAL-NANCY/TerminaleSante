@@ -52,7 +52,7 @@
 
         /* Style de la table */
         table {
-            width: 100%;
+            width: 50%;
             border-collapse: collapse;
             margin-top: 20px;
         }
@@ -63,22 +63,37 @@
         }
 
         /* Style pour les bonnes réponses (vert) */
-        .correct {
-            background-color: #28a745;
-            color: white;
+        .no_disco {
+            background-color: #70bc86;
+            color: black;
         }
 
-        /* Style pour les mauvaises réponses (rouge) */
-        .incorrect {
-            background-color: #dc3545;
-            color: white;
+        /* Style pour une discordance () */
+        .one_disco {
+            background-color: #A4D7A1;
+            color: black;
         }
 
+        /* Style pour deux discordances () */
+        .two_disco {
+            background-color: #F0D08C;
+            color: black;
+        }
+
+        /* Style pour trois ou plus discordances () */
+        .three_disco {
+            background-color: #d5506bd7;
+            color: black;
+        }
+        .encadre {
+            border: 1px solid black; /* Bordure noire de 2px */
+            padding: 2px;
+            margin: 2px;
+        }
 
     </style>
 
 </head>
-
 
 <body>
 
@@ -96,6 +111,27 @@
     <div id="result"></div>
 
     <script>
+
+        function COUNT_DISCORDANCES(chaine1, chaine2) {
+              let discordances = 0;
+        
+              // On vérifie les réponses manquantes dans la réponse de l'étudiant (chaine1)
+              for (let i = 0; i < chaine2.length; i++) {
+                if (chaine1.indexOf(chaine2.charAt(i)) === -1) {
+                  discordances++; // La bonne réponse n'est pas présente dans la réponse de l'étudiant
+                }
+              }
+          
+              // On vérifie aussi les mauvaises réponses dans la réponse de l'étudiant (chaine1)
+              for (let i = 0; i < chaine1.length; i++) {
+                if (chaine2.indexOf(chaine1.charAt(i)) === -1) {
+                  discordances++; // La réponse de l'étudiant est incorrecte
+                }
+              }
+          
+              return discordances;
+            }
+
         // Lien vers ton fichier CSV Google Sheets (ce fichier doit être public)
         const csvUrl = "https://raw.githubusercontent.com/BIOMEDAL-NANCY/TerminaleSante/refs/heads/main/Examen_blanc_BIOMEDAL.csv";
 
@@ -150,36 +186,69 @@
                     if (resultFound) {
                         // Afficher les résultats de l'étudiant
                         resultDiv.innerHTML = `
+                            <br>
+                            <br>
+                            <div class="encadre">
                             <h2>Résultats pour n°${studentID}</h2>
-                            <p><strong>Note générale</strong> : ${note}</p>
-                            <p><strong>Rang général</strong> : ${studentRank}</p>
-                            <p><strong>Note UE1</strong> : ${noteUE1}</p>
-                            <p><strong>Rang UE1</strong> : ${studentRankUE1}</p>
-                            <p><strong>Note UE2</strong> : ${noteUE2}</p>
-                            <p><strong>Rang UE2</strong> : ${studentRankUE2}</p>
-                            <p><strong>Note UE3</strong> : ${noteUE3}</p>
-                            <p><strong>Rang UE3</strong> : ${studentRankUE3}</p>
-                            <p><strong>Note UE4</strong> : ${noteUE4}</p>
-                            <p><strong>Rang UE4</strong> : ${studentRankUE4}</p>
+                            <p><strong>Note générale</strong> : ${note}/20</p>
+                            <p><strong>Rang général</strong> : ${studentRank}/40</p>
+                            <p><strong>Moyenne générale de l'ensemble des étudiants</strong> : 7,22/20</p>
+                            </div>
+                            <br>
+                            <br>
+
+                            <h3><u>UE1 - Biologie cellulaire et fondamentale</u></h3>
+                            <p><strong>Note UE1</strong> : ${noteUE1}/20</p>
+                            <p><strong>Rang UE1</strong> : ${studentRankUE1}/40</p>
+                            <p><strong>Moyenne de l'ensemble des étudiants à l'UE1</strong> : 7,18/20</p>
+                            <br>
+
+                            <h3><u>UE2 - Ondes, exploration et interprétation</u></h3>
+                            <p><strong>Note UE2</strong> : ${noteUE2}/20</p>
+                            <p><strong>Rang UE2</strong> : ${studentRankUE2}/40</p>
+                            <p><strong>Moyenne de l'ensemble des étudiants à l'UE2</strong> : 7,77/20</p>
+                            <br>
+
+                            <h3><u>UE3 - Chimie, biochimie et biologie moléculaire</u></h3>
+                            <p><strong>Note UE3</strong> : ${noteUE3}/20</p>
+                            <p><strong>Rang UE3</strong> : ${studentRankUE3}/40</p>
+                            <p><strong>Moyenne de l'ensemble des étudiants à l'UE3</strong> : 6,28/20</p>
+                            <br>
+
+                            <h3><u>UE4 - Physiologie fonctionnelle, cycle de vie des grandes fonctions</u></h3>
+                            <p><strong>Note UE4</strong> : ${noteUE4}/20</p>
+                            <p><strong>Rang UE4</strong> : ${studentRankUE4}/40</p>
+                            <p><strong>Moyenne de l'ensemble des étudiants à l'UE4</strong> : 7,65/20</p>
+                            <br>
+                            <br>
                         `;
 
                         // Afficher les réponses aux QCM
-                        let answersHtml = '<h3>Réponses aux QCM :</h3><table class="answers-table"><thead><tr><th>Question</th><th>Réponse de l\'étudiant</th><th>Réponse correcte</th></tr></thead><tbody>';
+                        let answersHtml = '<h3>Réponses aux QCM :</h3><table class="answers-table"><thead><tr><th>Question</th><th>Nombre de discordances</th><th>Réponse de l\'étudiant</th><th>Réponse correcte</th></tr></thead><tbody>';
                         
                         studentAnswers.forEach((answer, index) => {
                             const correctAnswer = correctAnswers[index];
-                            
+                            const discordancesStudent =  COUNT_DISCORDANCES(answer,correctAnswer);
 
-                            const rowClass = (answer === correctAnswer) ? 'correct' : 'incorrect';
+                            //const rowClass = 'no_disco';
+
+                            const rowClass = (discordancesStudent === 0) ? 'no_disco' : (discordancesStudent === 1) ? 'one_disco' : (discordancesStudent === 2) ? 'two_disco' : (discordancesStudent >= 3) ? 'three_disco' : 'incorrect';
+                            
+                            
+                            //const rowClass = (answer === correctAnswer) ? 'correct' : 'incorrect';
                             //console.log(`QCM ${index + 1}: Réponse de l'étudiant = ${answer}, Réponse correcte = ${correctAnswer}, class - ${rowClass}`);
                             answersHtml += `
-                                <tr class="${rowClass}">
-                                    <td>QCM ${index + 1}</td>
-                                    <td>${answer}</td>
-                                    <td>${correctAnswer}</td>
-                                </tr>
+                            <tr>
+                                <td style="background-color: #5a8da3;color: white;">QCM ${index + 1}</td>
+                                <td class="${rowClass}">${COUNT_DISCORDANCES(answer, correctAnswer)}</td>
+                                <td>${answer}</td>
+                                <td>${correctAnswer}</td>
+                            </tr>
                             `;
+
                         });
+
+                        //<td>QCM ${index + 1}</td>
                         
                         answersHtml += '</tbody></table>';
                         resultDiv.innerHTML += answersHtml; // Ajouter les réponses à la page
